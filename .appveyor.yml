@@ -9,8 +9,8 @@ environment:
     - VS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
       GD_PLATFORM: windows
       TOOLS: yes
-      TARGET: release_debug
-      ARCH: amd64
+      TARGET: debug
+      ARCH: x86
 
 init:
   - ps: if ($env:APPVEYOR_REPO_BRANCH -ne "master") { $env:APPVEYOR_CACHE_SKIP_SAVE = "true" }
@@ -32,4 +32,12 @@ before_build:
   - set "SCONS_CACHE=%SCONS_CACHE_ROOT%\%APPVEYOR_REPO_BRANCH%"
 
 build_script:
-  - scons platform=%GD_PLATFORM% target=%TARGET% tools=%TOOLS% debug_symbols=no verbose=yes progress=no gdnative_wrapper=yes
+  - scons platform=%GD_PLATFORM% target=%TARGET% tools=%TOOLS% verbose=yes progress=no gdnative_wrapper=yes
+
+after_build:
+  - tar -czf bin/archiv.tar bin/godot.windows.tools.32.exe
+  
+artifacts:
+  - path: bin/archiv.tar
+    name: GodotDebug
+  
