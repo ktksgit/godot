@@ -17,16 +17,16 @@ cache:
 
 matrix:
   include:
-    - name: Windows editor (debug, GCC 9)
-      env: PLATFORM=windows TOOLS=yes TARGET=debug CACHE_NAME=${PLATFORM}-tools-mono-gcc-9 MATRIX_EVAL="CC=gcc-9 && CXX=g++-9" 
+    - name: Windows editor (debug, GCC 7)
+      env: PLATFORM=windows TOOLS=yes TARGET=debug CACHE_NAME=${PLATFORM}-tools-mono-gcc-7 MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" 
       os: linux
-      compiler: gcc-9
+      compiler: gcc-7
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - &gcc9_deps [gcc-9, g++-9]
+            - &gcc7_deps [gcc-7, g++-7]
             - &linux_deps [libasound2-dev, libfreetype6-dev, libgl1-mesa-dev, libglu1-mesa-dev, libx11-dev, libxcursor-dev, libxi-dev, libxinerama-dev, libxrandr-dev]
             # For cross-compiling to Windows.
             - binutils-mingw-w64-i686
