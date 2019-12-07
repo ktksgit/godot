@@ -742,15 +742,10 @@ cleanup:
 static mbedtls_mpi_uint mpi_uint_bigendian_to_host_c( mbedtls_mpi_uint x )
 {
     uint8_t i;
-    unsigned char *x_ptr;
     mbedtls_mpi_uint tmp = 0;
-
-    for( i = 0, x_ptr = (unsigned char*) &x; i < ciL; i++, x_ptr++ )
-    {
-        tmp <<= CHAR_BIT;
-        tmp |= (mbedtls_mpi_uint) *x_ptr;
-    }
-
+    /* This works regardless of the endianness. */
+    for( i = 0; i < ciL; i++, x >>= 8 )
+        tmp |= ( x & 0xFF ) << ( ( ciL - 1 - i ) << 3 );
     return( tmp );
 }
 
@@ -2356,8 +2351,7 @@ static int mpi_miller_rabin( const mbedtls_mpi *X, size_t rounds,
             }
 
             if (count++ > 30) {
-                ret = MBEDTLS_ERR_MPI_NOT_ACCEPTABLE;
-                goto cleanup;
+                return MBEDTLS_ERR_MPI_NOT_ACCEPTABLE;
             }
 
         } while ( mbedtls_mpi_cmp_mpi( &A, &W ) >= 0 ||
